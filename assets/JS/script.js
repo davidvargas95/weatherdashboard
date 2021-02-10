@@ -8,22 +8,23 @@ function weather(city) {
         method: "GET"
     }).then(function(response) {
         console.log(response);
+        $("#selectedCity").removeClass("d-none");
+
+
+        var temp = (response.main.temp);
+        var date = moment().format("MM/DD/YYYY");
+        var weatherIcon = (response.weather[0].icon);
+        var URL = "https://openweathermap.org/img/w/" + weatherIcon + ".png";
+
+        $("#cityName").html(response.name + " " + date + "<img id= 'wicon' src= '' alt= 'Weather Icon'>");
+        $("#wicon").attr("src", URL);
+        $("#temp").text("Temperature: " + temp.toFixed(2) + "°F");
+        $("#rh").text("Humidity: " + response.main.humidity + "%");
+        $("#wind").text("Wind: " + response.wind.speed + "mph");
+
     })
 
-    var temp = (response.main.temp);
-    var date = moment().format("MM/DD/YYYY");
-    var icon = (response.weather[0].icon);
-    // var URL = "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
-
-    $("#cityName").html("<h3>" + response.name + " " + date + "</h3>");
-    // $("weatherImage").attr("src", weatherURL);
-    $("#temp").text("Temperature: " + temp.toFixed(2) + "°F");
-    $("#rh").text("Humidity: " + response.main.humidity + "%");
-    $("wind").text("Wind: " + response.wind.speed + "mph");
-
-    $("selectedCity").removeClass("d-none");
-
-}
+};
 
 $("#searchButton").on("click", function() {
 
