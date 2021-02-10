@@ -21,10 +21,54 @@ function weather(city) {
         $("#temp").text("Temperature: " + temp.toFixed(2) + "°F");
         $("#rh").text("Humidity: " + response.main.humidity + "%");
         $("#wind").text("Wind: " + response.wind.speed + "mph");
+       
+        uvIndex(response.coord.lat, response.coord.lon);
 
     })
-
 };
+
+function uvIndex(lat, lon) {
+    var uvURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
+
+    $.ajax({
+        url: uvURL,
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
+
+        $("#uvIndex").text("UV Index: " + response.value);
+    })
+};
+
+function forecast(city) {
+    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey + "&units=imperial";
+
+    $.ajax({
+        url: forecastURL,
+        method: "GET"
+      }).then(function (forecastFiveDay) {
+      console.log(forecastFiveDay);
+      
+      var forecastFiveDay = forecastFiveDay.list;
+      
+      $(document).ready(function() {
+      
+        $("#date").text(`(${moment().format("l")})`);
+          for (i = 1; i < 7; i++) {
+            var forecastDate = $(`#date${i}`);
+            forecastDate.text(moment().add(`${i}`, "d").format("l"));
+      
+          };
+      
+          for (i = 0; i < forecastFiveDay.length; i++) {
+      
+              $("#forecastIcon" + i).attr("src", "https://openweathermap.org/img/wn/" + (forecastFiveDay[i].weather[0].icon) + ".png");
+              $("#temp" + i).text("Temp: " + Math.round(forecastFiveDay[i].main.temp) + " °F");
+              $("#rh" + i).text("Humidity: " + forecastFiveDay[i].main.humidity + "%");
+            
+            }
+      });           
+    })};
 
 $("#searchButton").on("click", function() {
 
@@ -34,4 +78,5 @@ $("#searchButton").on("click", function() {
     $("#cityList").prepend(cityList);
 
     weather(city);
+    forecast(city);
 });
