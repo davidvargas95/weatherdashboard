@@ -1,6 +1,7 @@
 var apiKey = "8a3df2d4149c73620293eafae4c053d0"
 
 
+// Lines 5-12 write to the HTML from local storage
 var saved = JSON.parse(localStorage.getItem("previouslySearched")) || [];
 
 for (i = 0; i < saved.length; i++) {
@@ -10,7 +11,7 @@ for (i = 0; i < saved.length; i++) {
   $("#cityList").prepend(cityButton);
 }
 
-
+// Adds search button functionality
 $("#searchButton").on("click", function() {
 
     var city = $("#cityInput").val();   
@@ -25,6 +26,7 @@ $("#searchButton").on("click", function() {
     forecast(city);
 });
 
+// Adds funcionality to the city buttons below the search panel
 $("#cityList").on("click", "button", function () {
 
     var cityButton = $(this).data("city");
@@ -33,6 +35,7 @@ $("#cityList").on("click", "button", function () {
     forecast(cityButton);
 });
 
+// ajax call to the Open Weather API to get current data on selected city
 function weather(city) {
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=imperial";
 
@@ -60,6 +63,7 @@ function weather(city) {
     })
 };
 
+// ajax call to the Open Weather API to get current UV data on selected city
 function uvIndex(lat, lon) {
     var uvURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey + "&units=imperial";
 
@@ -73,6 +77,7 @@ function uvIndex(lat, lon) {
     })
 };
 
+// ajax call to the Open Weather API to get forcasted data on selected city
 function forecast(city) {
     var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey + "&units=imperial";
 
