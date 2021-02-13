@@ -1,5 +1,38 @@
 var apiKey = "8a3df2d4149c73620293eafae4c053d0"
 
+
+var saved = JSON.parse(localStorage.getItem("previouslySearched")) || [];
+
+for (i = 0; i < saved.length; i++) {
+
+  var cityButton = $(`<button class="list-group-item mx-3 mr-sm-2 w-75" data-city="${saved[i]}">${saved[i]}</button>`);
+
+  $("#cityList").prepend(cityButton);
+}
+
+
+$("#searchButton").on("click", function() {
+
+    var city = $("#cityInput").val();   
+    var cityList = $(`<button class= "list-group-item mx-3 mr-sm-2 w-75" data-city= "${city}">${city}</button>`);
+
+    $("#cityList").prepend(cityList);
+
+    saved.push(city);
+    localStorage.setItem("previouslySearched", JSON.stringify(saved));
+
+    weather(city);
+    forecast(city);
+});
+
+$("#cityList").on("click", "button", function () {
+
+    var cityButton = $(this).data("city");
+
+    weather(cityButton);
+    forecast(cityButton);
+});
+
 function weather(city) {
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey + "&units=imperial";
 
@@ -69,14 +102,3 @@ function forecast(city) {
             }
       });           
     })};
-
-$("#searchButton").on("click", function() {
-
-    var city = $("#cityInput").val();   
-    var cityList = $(`<button class= "list-group-item mx-3 mr-sm-2 w-50" data-city= "${city}">${city}</button>`);
-
-    $("#cityList").prepend(cityList);
-
-    weather(city);
-    forecast(city);
-});
